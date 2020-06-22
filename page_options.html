@@ -1,0 +1,70 @@
+ <!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			table { width: 100%; }
+			th, td { border: 1px solid black ; padding: 2px 4px; }
+			nav div { padding: 5px 0 ; }
+			nav button { margin-right: 5px ; }
+			nav input { margin-bottom: 5px ; }
+			#err_msgs { color: red ; }
+		</style>
+		<script src="common.js"></script>		
+		<script src="page_options.js"></script>
+	</head>
+	<body>
+		<section>
+			<h3>Usage</h3>
+			<p>Example : "go y koala"</p>
+			<p>
+				<span>Go to the omnibox and type "go" and a space.</span><br />
+				<span>Then type a bang, for example "y"</span><br />
+				<span>A suggestion for "https://youtube.com" appears, select it with "down key then enter key" or with mouse.</span><br />
+				<span>If you wish type a space and "koala".</span><br />
+				<span>A suggestion for "https://www.youtube.com/results?search_query=koala" appears, notice that it directly makes a youtube search with the "koala" query.</span>
+			</p>
+			<h3>More Information</h3>
+			<p>The omnibox is the address bar, the large one that Firefox now makes the only one (by default). Firefox lets you enable a "search bar" which is only for search engines. This "search bar" will not display suggestions from this extension.</p>
+			<p>The first "suggestion" is not a real suggestion. It is only text that Firefox displays because you typed the extension keyword "go" in the omnibox. I could not disable this first suggestion, this is imposed by the Omnibox API.</p>
+			<p>I got the idea from DuckDuckGo bangs. The advantages of this extension are : 1) directly going to the url, instead of redirecting by the search engine, so this is faster and gives you more privacy ; 2) unifying the bangs, because now several search engines use bangs, also here you can easily personnalise the bangs as you wish.</p>
+			<p>You should always manually check sensitive URL, like your bank website for example. This is true for URL suggested by this extension, and URL you get from your bookmarks, etc.</p>
+		</section>
+		<nav>
+			<h3>Actions</h3>
+			<div><span>bangs modified by user : <span id="modified" >?</span></div>
+			<hr />
+			<div id="actions" >
+				<button id="reset" >reset all to default bangs</button>
+				<button id="new" >new bang</button>
+				<button id="modify" >modify bang</button>
+				<button id="delete" >delete bang</button>
+			</div>
+			<hr />
+			<div id="sub_actions" ></div>
+			<span id="err_msgs" ></span>
+			<hr />
+		</nav>
+		<section>
+			<h3>Bangs list</h3>
+			<ul>
+				<li>"bang" is the key used to target one website. For example "w" targets Wikipedia.</li><br />
+				<li>"label" is a human readable short description of the bang. it will be displayed in the suggestion. For example "wikipedia" is the label for Wikipedia.</li><br />
+				<li>"URL without param" is used to suggest URL without additional word. "https://www.reddit.com" is such an URL.</li><br />
+				<li>"URL before param" is used to suggest URL with an additional param to query directly to a page of the website, or directly querying the search system of the website. For example, "https://www.youtube.com/results?search_query=" is used to query directly to the search system of Youtube. The param will be inserted just after.
+				Setting "URL before param" to empty will disable the param system : "URL without param" will be used no matter a param was entered or not by the user.</li><br />
+				<li>"URL after param" is used in combination with "URL before param". It is used for websites which require to put additional text in the URL after the param. Generally param is at the end, so generally this field is let empty.</li>
+			</ul>
+			<table>
+				<thead><tr>
+					<th>bang</th>
+					<th>label</th>
+					<th>URL without param</th>
+					<th>URL before param</th>
+					<th>URL after param</th>
+				</tr></thead>
+				<tbody id="bangs"></tbody>
+			</table>
+		</section>
+	</body>
+</html>

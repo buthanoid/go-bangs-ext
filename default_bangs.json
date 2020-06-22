@@ -1,0 +1,10 @@
+[
+	["w", "wikipedia", "https://wikipedia.org", "https://wikipedia.org/wiki/", ""],
+	["wfr", "wikipedia fr", "https://fr.wikipedia.org", "https://fr.wikipedia.org/wiki/", ""],
+	["wt", "wiktionnary", "https://www.wiktionary.org/", "https://www.wiktionary.org/wiki/", ""],
+	["wtfr", "wiktionnaire", "https://fr.wiktionary.org/", "https://fr.wiktionary.org/wiki/", ""],
+	["enfr", "cambridge traduction en>fr", "https://dictionary.cambridge.org/fr/dictionnaire/anglais-francais/", "https://dictionary.cambridge.org/fr/dictionnaire/anglais-francais/", ""],
+	["y", "youtube", "https://www.youtube.com/", "https://www.youtube.com/results?search_query=", ""],
+	["g", "google", "https://www.google.com/", "https://www.google.com/search?q=", ""],
+	["gi", "google", "https://www.google.com/imghp", "https://www.google.com/search?tbm=isch&q=", ""]	
+]

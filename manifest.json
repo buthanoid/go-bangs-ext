@@ -1,0 +1,16 @@
+{
+	"manifest_version": 2,
+	
+	"name": "Go Bangs Ext",
+	"version": "0.1",
+	"description": "Provide bangs (shortcuts) to suggest websites in the omnibox (address bar). Support for direct querying into the website. For example, typing \"go y koala\" will suggest the URL \"https://www.youtube.com/results?search_query=koala\".",
+	"icons": { "48": "icons/icon-48.png" },
+
+	"omnibox": { "keyword": "go" },
+	
+	"background": { "scripts": [ "common.js", "main_background.js" ] },
+	
+	"options_ui": { "page": "page_options.html", "browser_style": true },
+	
+	"permissions": [ "storage" ]
+}
