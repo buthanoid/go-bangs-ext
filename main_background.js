@@ -1,3 +1,6 @@
+var bangs ; // contains the data. 
+var user_input ; // see comments for the function handler_input_enter
+
 // if "init" is not in the storage, it means the storage is empty
 // it is the case for example when the extension is just installed and
 // this script is executed for the first time ever.
@@ -9,12 +12,18 @@ storage_get_key("init")
 		return init ();
 	else throw err ;
 })
-// when we have dealt with init, we establish 	the extension behaviour
-// which is suggesting urls in the omnibox when the extension keyword is entered
+.then(() => {
+	storage_get_key("bangs")
+	.then(res_bangs => {
+		bangs = res_bangs ;
+	});
+})
+// we establish the extension behaviour, which is
+// suggesting urls in the omnibox when the extension keyword is entered
 .then(() => {
 	browser.omnibox.setDefaultSuggestion({ description: "Go Bangs Ext : enter a bang to suggest a website." });
+	browser.storage.onChanged.addListener(handler_storage_change);
 	// event handlers on the omnibox (address bar)
-	browser.omnibox.onInputStarted.addListener (handler_input_start) ;
 	browser.omnibox.onInputChanged.addListener (handler_input_change) ;
 	browser.omnibox.onInputEntered.addListener (handler_input_enter) ;
 });
@@ -31,39 +40,16 @@ function init () {
 		});
 }
 
-var bangs ; // contains the data. shared between the handlers.
-var loaded = false ; // says if bangs have been loaded. shared between the handlers.
-var user_input ; // see comments for the function handler_input_enter
-
-// called when the user type the extension keyword and a space in the omnibox
-function handler_input_start () {
-	// we refresh the bangs each time the input is started.
-	// This is used to take account of the changes in the storage which
-	// can be made from the options page.
-	// It is assumed that it is light in terms of memory and time to do this.
-	// Surely there is a better way to do it.
-	// We could also read the bangs only once when this script (main_background.js) is
-	// called, but that would impose to restart the browser every
-	// time we change the options and want to see the changes.
-
-	loaded = false ; // used to prevent "handler_input_change" to read variable "bangs" before it is written
-	user_input = "" ;
-	storage_get_key("bangs")
-	.then(res_bangs => {
-		bangs = res_bangs ;
-		loaded = true ;
-	});
+// called every time the storage changes
+// this happen when the user uses the options page actions
+function handler_storage_change (changes, areaName) {
+	if (areaName != "local") return ;
+	if (! changes.hasOwnProperty("bangs")) return ;
+	bangs = changes.bangs.newValue ;
 }
 
 // called every time the user type something after the extension keyword and a space
 function handler_input_change (input_str, make_suggests) {
-	
-	// if "handler_input_start" has not written the bangs yet,
-	// we do nothing but will return soon and surely it will be written
-	if (! loaded) {
-		setTimeout (() => { handler_input_change (input_str, make_suggests) }, 100) ;
-		return 
-	}
 	
 	user_input = input_str ;
 	var input = parse_input(user_input) ;
@@ -82,17 +68,11 @@ function handler_input_change (input_str, make_suggests) {
 // description, this is imposed by the Omnibox API.
 // When the first suggestion is selected, the "url" contains the
 // user input, for example "y koala", and this is an incorrect url.
-// We handle this by checking if the url is exactly the user input in the omnibox.
+// We handle this by checking if the url is exactly 
+// the user input in the omnibox (minus the extension keyword).
 // If it is the case, we try to load the first suggestion.
 // If the "url" does not match the user input, we assume it is correct and load.
 function handler_input_enter (url, disposition) {
-	
-	// if "handler_input_start" has not written the bangs yet,
-	// we do nothing but will return soon and surely it will be written
-	if (! loaded) {
-		setTimeout (() => { handler_input_enter (url, disposition) }, 100) ;
-		return 
-	}
 	
 	if (url == user_input) { // true when user selects default suggestion,
 		// see comments above
